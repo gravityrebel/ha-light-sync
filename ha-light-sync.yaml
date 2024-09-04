@@ -39,10 +39,10 @@ max_exceeded: silent
 variables:
   controllingLight: !input controlling_light
   controllingLightBrightness: |
-    {{ (state_attr(controllingLight, 'brightness') / 2.55) }}
-  minBrightness: !input min_brightness
+    {{ state_attr(controllingLight, 'brightness') }}
+  minBrightness: !input min_brightness * 2.55
   brightnessValue: |
-    {{ ((((100 - minBrightness) / 99 ) * controllingLightBrightness + minBrightness - (100 - minBrightness) / 99 ) * 2.55) | round(0) }}
+    {{ 255 - (255/minBrightness) * (255-controllingLightBrightness) | round(0) }}
 trigger:
 - platform: state
   entity_id: !input controlling_light
